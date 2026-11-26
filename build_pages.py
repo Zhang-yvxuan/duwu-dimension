@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+﻿# -*- coding: utf-8 -*-
 """生成渡物 Dimension 六个静态页面。页面内容在这里维护，导航和页脚只写一次。"""
 from pathlib import Path
 
@@ -52,7 +52,7 @@ def page(slug, title, desc, body, wide=False):
   </div>
   <div class="foot-links">
     <a href="about.html">关于这个站</a>
-    <a href="https://github.com/Zhang-yvxuan/Dimension-UI-design-" target="_blank" rel="noopener">GitHub ↗</a>
+    <a href="https://github.com/Zhang-yvxuan/duwu-dimension" target="_blank" rel="noopener">GitHub ↗</a>
     <a href="#top">回到顶部 ↑</a>
   </div>
 </footer>
@@ -224,7 +224,7 @@ about_body = '''
   <h2>旧版</h2>
   <p>旧版已经被这一版覆盖了，代码还留在同一个仓库的提交历史里，翻到 2025 年 9 月那几次提交就能看到当年那二十几个页面。它不完美，但它是第一个。</p>
   <p class="prose-links">
-    <a class="btn ghost" href="https://github.com/Zhang-yvxuan/Dimension-UI-design-/commits/main" target="_blank" rel="noopener">翻提交历史 ↗</a>
+    <a class="btn ghost" href="https://github.com/Zhang-yvxuan/duwu-dimension/commits/main" target="_blank" rel="noopener">翻提交历史 ↗</a>
     <a class="btn ghost" href="index.html">回首页</a>
   </p>
 </article>
