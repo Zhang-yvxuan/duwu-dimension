@@ -1,231 +1,62 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="zh-CN">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AI助手 - 渡物 Dimension</title>
-  <link rel="stylesheet" href="assets/css/style.css">
-  <style>
-    .chat-container {
-      max-height: 60vh;
-      overflow-y: auto;
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: var(--gap);
-      margin-bottom: var(--gap);
-      background: var(--color7);
-    }
-    .message {
-      margin-bottom: var(--gap);
-      padding: 0.5rem;
-      border-radius: 0.5rem;
-      max-width: 80%;
-    }
-    .message.user {
-      background: var(--primary);
-      color: #fff;
-      margin-left: auto;
-    }
-    .message.ai {
-      background: var(--card-bg);
-      color: var(--text);
-    }
-    .message img {
-      max-width: 100px;
-      border-radius: 0.5rem;
-      cursor: pointer;
-    }
-    .message-content span.bold-text {
-      font-weight: 600;
-      color: var(--primary);
-    }
-    #loading {
-      text-align: center;
-      color: var(--muted);
-    }
-    .dark-mode .message.user {
-      background: var(--color5);
-    }
-    .dark-mode .message.ai {
-      background: var(--color4);
-    }
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>问一句 · 渡物 Dimension</title>
+<meta name="description" content="卷尺人按商品目录回答尺寸、材质与定制问题。">
+<link rel="icon" href="assets/img/favicon.png" sizes="64x64">
+<link rel="stylesheet" href="assets/css/site.css">
+<script type="module" src="assets/js/main.js"></script>
 </head>
-<body>
-  <header class="site-header">
-    <div class="nav-container">
-      <nav class="nav-menu">
-        <div class="nav-item"><a href="index.html">首页</a></div>
-        <div class="nav-item"><a href="designs.html">设计</a></div>
-        <div class="nav-item dropdown">
-          <a href="categories.html">商品</a>
-          <div class="dropdown-content">
-            <a href="categories.html#basic">基础</a>
-            <a href="categories.html#light">灯类</a>
-            <a href="categories.html#bed">床类</a>
-            <a href="categories.html#table">桌类</a>
-            <a href="categories.html#chair">椅类</a>
-            <a href="categories.html#stool">凳类</a>
-            <a href="categories.html#sofa">沙发</a>
-            <a href="categories.html#cabinet">柜类</a>
-            <a href="categories.html#shelf">架类</a>
-            <a href="categories.html#decoration">装饰</a>
-            <a href="categories.html#suite">组合</a>
-            <a href="categories.html#other">其他</a>
-          </div>
-        </div>
-        <div class="nav-item search"><input type="text" placeholder="搜索..."></div>
-        <div class="nav-item"><a href="settings.html">设置</a></div>
-        <div class="nav-item"><a href="profile.html">个人中心</a></div>
-        <div class="nav-item"><a href="contact.html">联系我们</a></div>
-        <div class="nav-item">🎵</div>
-      </nav>
-    </div>
-  </header>
-  <div class="nav-spacer"></div>
-  <div class="container">
-    <h1 class="function_title">AI助手</h1>
-    <div class="form-card">
-      <div class="chat-container" id="messages"></div>
-      <div class="flex flex-col gap-1">
-        <label>
-          <span>输入消息</span>
-          <input type="text" id="chat-input" placeholder="输入您的消息...">
-        </label>
-        <button type="submit" class="btn" onclick="sendMessage()">发送</button>
-      </div>
-    </div>
+<body data-page="assistant">
+<a class="skip" href="#main">跳到正文</a>
+<header class="top" id="top">
+  <a class="brand" href="index.html">
+    <img src="assets/img/logo-mark.png" alt="" width="30" height="30">
+    <span>渡物<em>Dimension</em></span>
+  </a>
+  <nav class="nav" aria-label="站内导航"><a href="products.html">商品</a><a href="studio.html">工作室</a><a href="assistant.html" aria-current="page">助手</a><a href="about.html">关于</a></nav>
+  <button class="sound" type="button" aria-pressed="false" aria-label="开关背景音乐">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h3l5-4v14l-5-4H4z"/><path class="wave" d="M16 8.5c1.6 1.7 1.6 5.3 0 7"/><path class="wave" d="M18.8 6c2.8 2.9 2.8 9.1 0 12"/></svg>
+  </button>
+</header>
+<main id="main">
+
+<header class="page-head">
+  <p class="kicker">助手</p>
+  <h1>问一句</h1>
+  <p>尺寸、材质、能不能改、多久送到——卷尺人只答商品目录里写着的参数，查不到会直说。</p>
+</header>
+
+<div class="chat">
+  <div class="chat-figure">
+    <img src="assets/img/bot.png" alt="卷尺人，渡物的 AI 助手" width="220" height="220">
+    <p class="chat-name">卷尺人</p>
   </div>
-  <footer class="site-footer">
-    <p>© 2025 渡物 Dimension. 保留所有权利。</p>
-  </footer>
-  <script>
-    // 格式化消息文本
-    function formatMessage(text) {
-      if (!text) return '';
-      let lines = text.split('\n');
-      let formattedLines = lines.map(line => {
-        line = line.replace(/\*\*(.*?)\*\*/g, '<span class="bold-text">$1</span>');
-        return line;
-      });
-      let processedText = formattedLines.join('\n');
-      let sections = processedText
-        .split('###')
-        .filter(section => section.trim())
-        .map(section => {
-          let lines = section.split('\n').filter(line => line.trim());
-          if (lines.length === 0) return '';
-          let result = '';
-          let currentIndex = 0;
-          while (currentIndex < lines.length) {
-            let line = lines[currentIndex].trim();
-            if (/^\d+\./.test(line)) {
-              result += `<p class="section-title">${line}</p>`;
-            } else if (line.startsWith('-')) {
-              result += `<p class="subsection"><span class="bold-text">${line.replace(/^-/, '').trim()}</span></p>`;
-            } else if (line.includes(':')) {
-              let [subtitle, content] = line.split(':').map(part => part.trim());
-              result += `<p><span class="subtitle">${subtitle}</span>: ${content}</p>`;
-            } else {
-              result += `<p>${line}</p>`;
-            }
-            currentIndex++;
-          }
-          return result;
-        });
-      return sections.join('');
-    }
+  <div class="chat-main">
+    <div class="chat-log" id="log" aria-live="polite"></div>
+    <form class="chat-form" id="form">
+      <label class="sr" for="msg">输入问题</label>
+      <input id="msg" type="text" placeholder="例如：Theo 床能改尺寸吗" autocomplete="off">
+      <button class="btn solid" type="submit">发送</button>
+    </form>
+    <div class="chat-suggest" id="suggest"></div>
+  </div>
+</div>
 
-    // 显示消息
-    function displayMessage(role, message) {
-      const messagesContainer = document.getElementById('messages');
-      const messageElement = document.createElement('div');
-      messageElement.className = `message ${role}`;
-      const avatar = document.createElement('img');
-      avatar.src = role === 'user' ? 'assets/images/user-avatar.png' : 'assets/images/bot-avatar.png';
-      avatar.alt = role === 'user' ? 'User' : 'Bot';
-      const messageContent = document.createElement('div');
-      messageContent.className = 'message-content';
-      messageContent.innerHTML = role === 'user' ? message : formatMessage(message);
-      messageElement.appendChild(avatar);
-      messageElement.appendChild(messageContent);
-      messagesContainer.appendChild(messageElement);
-      messageElement.scrollIntoView({ behavior: 'smooth' });
-    }
-
-    // 发送消息
-    function sendMessage() {
-      const inputElement = document.getElementById('chat-input');
-      const message = inputElement.value;
-      if (!message.trim()) return;
-      displayMessage('user', message);
-      inputElement.value = '';
-      const loadingElement = document.createElement('div');
-      loadingElement.id = 'loading';
-      loadingElement.style.display = 'block';
-      loadingElement.textContent = '加载中...';
-      document.getElementById('messages').appendChild(loadingElement);
-      const apiKey = 'sk-5667c8b26be74ec5904616e7638ffc1e'; // 替换为实际API密钥
-      const endpoint = 'https://api.deepseek.com/chat/completions';
-      const payload = {
-        model: "deepseek-chat",
-        messages: [
-          { role: "system", content: "你是渡物Dimension的AI助手，专注于提供家居设计建议，风格简洁、现代，回答专业且具象化，帮助用户优化室内布局与装饰选择。" },
-          { role: "user", content: message }
-        ],
-        stream: false
-      };
-      fetch(endpoint, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${apiKey}`
-        },
-        body: JSON.stringify(payload)
-      })
-      .then(response => response.json())
-      .then(data => {
-        if (loadingElement) loadingElement.remove();
-        if (data.choices && data.choices.length > 0) {
-          displayMessage('bot', data.choices[0].message.content);
-        } else {
-          displayMessage('bot', '出错了，请稍后再试。');
-        }
-      })
-      .catch(error => {
-        if (loadingElement) loadingElement.remove();
-        displayMessage('bot', '出错了，请稍后再试。');
-        console.error('Error:', error);
-      });
-    }
-
-    // 添加回车发送功能
-    document.getElementById('chat-input').addEventListener('keypress', function(event) {
-      if (event.key === 'Enter' && !event.shiftKey) {
-        event.preventDefault();
-        sendMessage();
-      }
-    });
-
-    // 主题切换功能
-    function toggleTheme() {
-      document.body.classList.toggle('dark-mode');
-      const chatContainer = document.querySelector('.chat-container');
-      chatContainer.classList.toggle('dark-mode');
-      const messages = document.querySelector('#messages');
-      messages.classList.toggle('dark-mode');
-      localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
-    }
-
-    // 页面加载时检查主题设置
-    document.addEventListener('DOMContentLoaded', () => {
-      const isDarkMode = localStorage.getItem('darkMode') === 'true';
-      if (isDarkMode) {
-        document.body.classList.add('dark-mode');
-        document.querySelector('.chat-container').classList.add('dark-mode');
-        document.querySelector('#messages').classList.add('dark-mode');
-      }
-    });
-  </script>
+</main>
+<footer class="foot">
+  <div class="foot-main">
+    <p class="foot-brand">渡物 <em>Dimension</em></p>
+    <p class="foot-line">家居设计经销商 · 交互概念演示</p>
+  </div>
+  <div class="foot-links">
+    <a href="about.html">关于这个站</a>
+    <a href="https://github.com/Zhang-yvxuan/Dimension-UI-design-" target="_blank" rel="noopener">GitHub ↗</a>
+    <a href="#top">回到顶部 ↑</a>
+  </div>
+</footer>
+<audio id="bgm" src="assets/audio/piano-loop.mp3" loop preload="none"></audio>
 </body>
 </html>
